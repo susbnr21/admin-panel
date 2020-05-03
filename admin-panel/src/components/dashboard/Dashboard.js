@@ -6,9 +6,7 @@ import { logoutUser } from "../../actions/authActions";
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
 
-import './Dashboard.css'
-
-// import Navbar from "../layout/Navbar";
+import './Dashboard.css';
 
 class Dashboard extends Component {
   onLogoutClick = e => {
@@ -27,7 +25,9 @@ class Dashboard extends Component {
         this.setState({vehicle: res.data});
         console.log(res);
       }).catch(err => console.log('cannot access',err));
-  }  
+  }
+
+  
 
   render() {
     const { user } = this.props.auth;
@@ -87,7 +87,7 @@ class Dashboard extends Component {
               </ul>
               <ul className="nav flex-column mb-2">
                 <li className="nav-item">
-                  <a className="nav-link" href="/register">
+                <a className="nav-link" href="/register">
                     <span data-feather="file-text"></span>
                     Register
                   </a>
@@ -111,8 +111,8 @@ class Dashboard extends Component {
             </div>
             {/* TABLE */}
           <h3>Details</h3>
-          <div class="table-responsive">
-            <table class="table table-striped table-sm">
+          <div className="table-responsive">
+            <table className="table table-striped table-sm">
               <thead>
                 <tr>
                   <th>S.No</th>
@@ -151,10 +151,10 @@ class Dashboard extends Component {
                   <td>{vehicle.boxes}</td>
                   <td>{vehicle.extra}</td>
                   <td>
-                    <Button variant="success">Accept</Button>
+                    <Button className="green" variant="success">Accept</Button>
                   </td>
                   <td>
-                    <Button variant="danger">Reject</Button>
+                    <Button className="red" variant="danger">Reject</Button>
                   </td>
                 </tr>
                   )}

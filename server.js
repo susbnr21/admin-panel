@@ -2,8 +2,10 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
+const cors = require("cors");
 
 const users = require("./routes/api/users");
+const admins = require("./routes/api/admins");
 
 const app = express();
 
@@ -13,7 +15,9 @@ app.use(
     extended: false
   })
 );
+
 app.use(bodyParser.json());
+app.use(cors());
 
 // DB Config
 const db = require("./config/keys").mongoURI;
@@ -35,6 +39,7 @@ require("./config/passport")(passport);
 
 // Routes
 app.use("/api/users", users);
+app.use("/api/admins", admins);
 
 const port = process.env.PORT || 6000;
 

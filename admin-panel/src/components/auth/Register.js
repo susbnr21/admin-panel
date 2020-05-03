@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { registerUser } from "../../actions/authActions";
+import { registerAdmin } from "../../actions/authActions";
 import classnames from "classnames";
 
 class Register extends Component {
@@ -15,13 +15,6 @@ class Register extends Component {
       password2: "",
       errors: {}
     };
-  }
-
-  componentDidMount() {
-    // If logged in and user navigates to Register page, should redirect them to dashboard
-    if (this.props.auth.isAuthenticated) {
-      this.props.history.push("/dashboard");
-    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -39,14 +32,14 @@ class Register extends Component {
   onSubmit = e => {
     e.preventDefault();
 
-    const newUser = {
+    const newAdmin = {
       name: this.state.name,
       email: this.state.email,
       password: this.state.password,
       password2: this.state.password2
     };
 
-    this.props.registerUser(newUser, this.props.history);
+    this.props.registerAdmin(newAdmin, this.props.history);
   };
 
   render() {
@@ -107,7 +100,7 @@ class Register extends Component {
                 </ul>
                 <ul className="nav flex-column mb-2">
                   <li className="nav-item">
-                    <a className="nav-link" href="/">
+                    <a className="nav-link" href="/register">
                       <span data-feather="file-text"></span>
                       Register<span className="sr-only">(current)</span>
                     </a>
@@ -124,13 +117,10 @@ class Register extends Component {
                 </div>
               </div>
             <div className="col s8 offset-s2">
-              <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+              <div className="col s12 center" style={{ paddingLeft: "11.250px" }}>
                 <h4>
-                  <b>Register</b> below
+                  <b>Admin Register</b> below
                 </h4>
-                <p className="grey-text text-darken-1">
-                  Already have an account? <Link to="/login">Log in</Link>
-                </p>
               </div>
               <form noValidate onSubmit={this.onSubmit}>
                 <div className="input-field col s12">
@@ -189,7 +179,7 @@ class Register extends Component {
                   <label htmlFor="password2">Confirm Password</label>
                   <span className="red-text">{errors.password2}</span>
                 </div>
-                <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+                <div className="col s12 center" style={{ paddingLeft: "11.250px" }}>
                   <button
                     style={{
                       width: "150px",
@@ -214,7 +204,7 @@ class Register extends Component {
 }
 
 Register.propTypes = {
-  registerUser: PropTypes.func.isRequired,
+  registerAdmin: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -226,5 +216,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { registerUser }
+  { registerAdmin }
 )(withRouter(Register));

@@ -5,9 +5,9 @@ import jwt_decode from "jwt-decode";
 import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING } from "./types";
 
 // Register User
-export const registerUser = (userData, history) => dispatch => {
+export const registerAdmin = (adminData, history) => dispatch => {
   axios
-    .post("/api/users/register", userData)
+    .post("/api/admins/register", adminData)
     .then(res => history.push("/login"))
     .catch(err =>
       dispatch({
@@ -18,9 +18,9 @@ export const registerUser = (userData, history) => dispatch => {
 };
 
 // Login - get user token
-export const loginUser = userData => dispatch => {
+export const loginAdmin = adminData => dispatch => {
   axios
-    .post("/api/users/login", userData)
+    .post("/api/admins/login", adminData)
     .then(res => {
       // Save to localStorage
 
