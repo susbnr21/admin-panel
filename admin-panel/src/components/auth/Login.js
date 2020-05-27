@@ -53,7 +53,7 @@ class Login extends Component {
     const { errors } = this.state;
 
     return (
-      <div className="container" style={{backgroundColor: '#875959'}}> 
+      <div className="container"> 
         <div style={{ marginTop: "4rem" }} className="line">
           <div className="col s8 offset-s2" style={{padding: 100}}>
             <div className="center">

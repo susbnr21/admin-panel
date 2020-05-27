@@ -15,7 +15,8 @@ class Dashboard extends Component {
   };
 
   state = {
-    vehicle: []
+    vehicle: [],
+    status: 'Pending'
   };
 
   componentDidMount()
@@ -25,6 +26,90 @@ class Dashboard extends Component {
         this.setState({vehicle: res.data});
         console.log(res);
       }).catch(err => console.log('cannot access',err));
+  }
+
+  testSubmit = vehicle => {
+    axios.post(`http://localhost:5000/accept`,
+    {
+        name: vehicle.name,
+        email: vehicle.email,
+        contact: vehicle.contact,
+        address_from: vehicle.address_from,
+        address_to: vehicle.address_to,
+        truck_size: vehicle.truck_size,
+        description: vehicle.description,
+        weight: vehicle.weight,
+        truck_space: vehicle.truck_space,
+        capacity_furniture: vehicle.capacity_furniture,
+        capacity_box: vehicle.capacity_box,
+        worker: vehicle.worker,
+        boxes: vehicle.boxes,
+        extra: vehicle.extra
+    },
+    {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+    })
+    .then(res => {
+      console.log(res);
+      console.log(res.data);
+    })
+    .catch(err => {
+      console.log(`${err}`)
+    })
+    // this.setState({status: 'Approved'})
+    axios.delete(`http://localhost:5000/accept/${vehicle._id}`)
+      .then(res => {
+        window.location.reload(false);
+        console.log(res);
+        console.log(res.data);
+    })
+  }
+
+  handleSubmit = email => {
+    console.log(email)
+    axios.post(`http://localhost:5000/sendmail`,
+    {
+      email: email
+    },
+    {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+    })
+    .then(res => {
+      console.log(res);
+      console.log(res.data);
+    })
+    .catch(err => {
+      console.log(`${err}`)
+    })
+    this.setState({status: 'Approved'})
+  }
+
+
+  declineEmail = email => {
+    console.log(email)
+    axios.post(`http://localhost:5000/declinemail`,
+    {
+      email: email
+    },
+    {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+    })
+    .then(res => {
+      console.log(res);
+      console.log(res.data);
+    })
+    .catch(err => {
+      console.log(`${err}`)
+    })
   }
 
   
@@ -63,12 +148,6 @@ class Dashboard extends Component {
                     Customer <span className="sr-only">(current)</span>
                   </a>
                 </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    <span data-feather="file"></span>
-                    Orders
-                  </a>
-                </li>
               </ul>
 
               <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
@@ -77,14 +156,6 @@ class Dashboard extends Component {
                   <span data-feather="plus-circle"></span>
                 </a>
               </h6>
-              <ul className="nav flex-column mb-2">
-                <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    <span data-feather="file-text"></span>
-                    Notification
-                  </a>
-                </li>
-              </ul>
               <ul className="nav flex-column mb-2">
                 <li className="nav-item">
                 <a className="nav-link" href="/register">
@@ -97,26 +168,23 @@ class Dashboard extends Component {
           </nav>
 
           {/* BODY */}
-          <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4" style={{width: "100%"}}>
+          <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4 center" style={{width: "100%"}}>
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
               <h1 className="h2">Customer Requests</h1>
               <div className="btn-toolbar mb-2 mb-md-0">
                 <div className="btn-group mr-2">
                 </div>
-                <button type="button" className="btn btn-sm btn-outline-secondary dropdown-toggle">
-                  <span data-feather="calendar"></span>
-                  This week
-                </button>
               </div>
             </div>
+
             {/* TABLE */}
-          <h3>Details</h3>
           <div className="table-responsive">
-            <table className="table table-striped table-sm">
+            <table className="table table-striped table-sm" style={{width: 2300, height: 500}}>
               <thead>
                 <tr>
                   <th>S.No</th>
                   <th>Name</th>
+                  <th>Email</th>
                   <th>Contact</th>
                   <th>Address From</th>
                   <th>Address To</th>
@@ -129,6 +197,7 @@ class Dashboard extends Component {
                   <th>Worker</th>
                   <th>Boxes</th>
                   <th>Extra</th>
+                  <th>Status</th>
                   <th>Accept</th>
                   <th>Decline</th>
                 </tr>
@@ -138,6 +207,7 @@ class Dashboard extends Component {
                 <tr key= {i}>
                   <td>{++i}</td>
                   <td>{vehicle.name}</td>
+                  <td>{vehicle.email}</td>
                   <td>{vehicle.contact}</td>
                   <td>{vehicle.address_from}</td>
                   <td>{vehicle.address_to}</td>
@@ -150,11 +220,15 @@ class Dashboard extends Component {
                   <td>{vehicle.worker}</td>
                   <td>{vehicle.boxes}</td>
                   <td>{vehicle.extra}</td>
+                  <td>{this.state.status}</td>
                   <td>
-                    <Button className="green" variant="success">Accept</Button>
+                    <Button className="green" onClick={this.testSubmit.bind(this, vehicle)} variant="success">Test</Button>
                   </td>
                   <td>
-                    <Button className="red" variant="danger">Reject</Button>
+                    <Button className="green" onClick={this.handleSubmit.bind(this, vehicle.email)} variant="success">Accept</Button>
+                  </td>
+                  <td>
+                    <Button className="red" onClick={this.declineEmail.bind(this, vehicle.email)} variant="danger">Reject</Button>
                   </td>
                 </tr>
                   )}
@@ -170,6 +244,7 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
+  acceptValue: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
@@ -180,5 +255,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { logoutUser }
+  { logoutUser },
 )(Dashboard);
