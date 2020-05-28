@@ -11,6 +11,8 @@ import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/dashboard/Dashboard";
+import Decline from "./components/dashboard/Decline";
+import Accept from "./components/dashboard/Accept";
 
 import "./App.css";
 
@@ -43,6 +45,8 @@ class App extends Component {
             <Switch>
               <PrivateRoute exact path="/register" component={Register} />
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              <PrivateRoute exact path="/decline" component={Decline} />
+              <PrivateRoute exact path="/accept" component={Accept} />
             </Switch>
           </div>
         </Router>

@@ -71,15 +71,17 @@ class Register extends Component {
               <div className="sidebar-sticky">
                 <ul className="nav flex-column">
                   <li className="nav-item">
-                    <a className="nav-link active" href="/dashboard">
+                    <a className="nav-link" href="/dashboard">
                       <span data-feather="home"></span>
-                      Customer
+                      Requests
                     </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="#">
-                      <span data-feather="file"></span>
-                      Orders
+                    <a className="nav-link" href="/accept">
+                      <span data-feather="home"></span>
+                      Accept
+                    </a>
+                    <a className="nav-link" href="/decline">
+                      <span data-feather="home"></span>
+                      Decline
                     </a>
                   </li>
                 </ul>
@@ -92,15 +94,7 @@ class Register extends Component {
                 </h6>
                 <ul className="nav flex-column mb-2">
                   <li className="nav-item">
-                    <a className="nav-link" href="#">
-                      <span data-feather="file-text"></span>
-                      Notification
-                    </a>
-                  </li>
-                </ul>
-                <ul className="nav flex-column mb-2">
-                  <li className="nav-item">
-                    <a className="nav-link" href="/register">
+                    <a className="nav-link active" href="/register">
                       <span data-feather="file-text"></span>
                       Register<span className="sr-only">(current)</span>
                     </a>

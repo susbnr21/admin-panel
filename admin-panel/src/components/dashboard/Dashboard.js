@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
-// import { truckDetail } from '../../actions/authActions';
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
 
@@ -28,7 +27,25 @@ class Dashboard extends Component {
       }).catch(err => console.log('cannot access',err));
   }
 
-  testSubmit = vehicle => {
+
+  handleSubmit = vehicle => {
+    axios.post(`http://localhost:5000/sendmail`,
+    {
+      email: vehicle.email
+    },
+    {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+    })
+    .then(res => {
+      console.log(res);
+      console.log(res.data);
+    })
+    .catch(err => {
+      console.log(`${err}`)
+    })
     axios.post(`http://localhost:5000/accept`,
     {
         name: vehicle.name,
@@ -68,34 +85,11 @@ class Dashboard extends Component {
     })
   }
 
-  handleSubmit = email => {
-    console.log(email)
-    axios.post(`http://localhost:5000/sendmail`,
-    {
-      email: email
-    },
-    {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json; charset=UTF-8'
-      },
-    })
-    .then(res => {
-      console.log(res);
-      console.log(res.data);
-    })
-    .catch(err => {
-      console.log(`${err}`)
-    })
-    this.setState({status: 'Approved'})
-  }
 
-
-  declineEmail = email => {
-    console.log(email)
+  declineEmail = vehicle => {
     axios.post(`http://localhost:5000/declinemail`,
     {
-      email: email
+      email: vehicle.email
     },
     {
       headers: {
@@ -109,6 +103,42 @@ class Dashboard extends Component {
     })
     .catch(err => {
       console.log(`${err}`)
+    })
+    axios.post(`http://localhost:5000/decline`,
+    {
+        name: vehicle.name,
+        email: vehicle.email,
+        contact: vehicle.contact,
+        address_from: vehicle.address_from,
+        address_to: vehicle.address_to,
+        truck_size: vehicle.truck_size,
+        description: vehicle.description,
+        weight: vehicle.weight,
+        truck_space: vehicle.truck_space,
+        capacity_furniture: vehicle.capacity_furniture,
+        capacity_box: vehicle.capacity_box,
+        worker: vehicle.worker,
+        boxes: vehicle.boxes,
+        extra: vehicle.extra
+    },
+    {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+    })
+    .then(res => {
+      console.log(res);
+      console.log(res.data);
+    })
+    .catch(err => {
+      console.log(`${err}`)
+    })
+    axios.delete(`http://localhost:5000/decline/${vehicle._id}`)
+      .then(res => {
+        window.location.reload(false);
+        console.log(res);
+        console.log(res.data);
     })
   }
 
@@ -145,7 +175,15 @@ class Dashboard extends Component {
                 <li className="nav-item">
                   <a className="nav-link active" href="/">
                     <span data-feather="home"></span>
-                    Customer <span className="sr-only">(current)</span>
+                    Requests <span className="sr-only">(current)</span>
+                  </a>
+                  <a className="nav-link" href="/accept">
+                    <span data-feather="home"></span>
+                    Accept <span className="sr-only">(current)</span>
+                  </a>
+                  <a className="nav-link" href="/decline">
+                    <span data-feather="home"></span>
+                    Decline <span className="sr-only">(current)</span>
                   </a>
                 </li>
               </ul>
@@ -197,7 +235,6 @@ class Dashboard extends Component {
                   <th>Worker</th>
                   <th>Boxes</th>
                   <th>Extra</th>
-                  <th>Status</th>
                   <th>Accept</th>
                   <th>Decline</th>
                 </tr>
@@ -220,15 +257,11 @@ class Dashboard extends Component {
                   <td>{vehicle.worker}</td>
                   <td>{vehicle.boxes}</td>
                   <td>{vehicle.extra}</td>
-                  <td>{this.state.status}</td>
                   <td>
-                    <Button className="green" onClick={this.testSubmit.bind(this, vehicle)} variant="success">Test</Button>
+                    <Button className="green" onClick={this.handleSubmit.bind(this, vehicle)} variant="success">Accept</Button>
                   </td>
                   <td>
-                    <Button className="green" onClick={this.handleSubmit.bind(this, vehicle.email)} variant="success">Accept</Button>
-                  </td>
-                  <td>
-                    <Button className="red" onClick={this.declineEmail.bind(this, vehicle.email)} variant="danger">Reject</Button>
+                    <Button className="red" onClick={this.declineEmail.bind(this, vehicle)} variant="danger">Reject</Button>
                   </td>
                 </tr>
                   )}
@@ -244,7 +277,6 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
-  acceptValue: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
